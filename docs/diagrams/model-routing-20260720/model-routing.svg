@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+  <title id="title">WeStart 模型选择与工具调用结构图</title>
+  <desc id="desc">展示微信消息进入意图规划器后，如何选择文字、规划和视觉模型，以及图片生成、语音、天气和搜索工具。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#44546A"/>
+    </marker>
+    <style>
+      .title{font:700 34px "Microsoft YaHei","SimHei",sans-serif;fill:#1F2937}
+      .subtitle{font:400 18px "Microsoft YaHei","SimHei",sans-serif;fill:#5B6573}
+      .box{rx:14;ry:14;stroke-width:2}
+      .entry{fill:#EAF2F8;stroke:#2F5597}
+      .process{fill:#F7F9FC;stroke:#5B6B7A}
+      .model{fill:#E8F5E9;stroke:#3E7C59;stroke-width:2.5}
+      .tool{fill:#FFF8E1;stroke:#A67C00}
+      .store{fill:#F3EAF7;stroke:#765083}
+      .label{font:600 18px "Microsoft YaHei","SimHei",sans-serif;fill:#111827;text-anchor:middle}
+      .small{font:400 15px "Microsoft YaHei","SimHei",sans-serif;fill:#374151;text-anchor:middle}
+      .edge{fill:none;stroke:#44546A;stroke-width:2.1;marker-end:url(#arrow)}
+      .dash{fill:none;stroke:#3E7C59;stroke-width:2;stroke-dasharray:8 6;marker-end:url(#arrow)}
+      .edgeLabel{font:500 15px "Microsoft YaHei","SimHei",sans-serif;fill:#374151;text-anchor:middle}
+      .group{fill:none;stroke:#B8C2CC;stroke-width:1.5;stroke-dasharray:7 6;rx:18;ry:18}
+      .groupTitle{font:600 18px "Microsoft YaHei","SimHei",sans-serif;fill:#44546A}
+    </style>
+  </defs>
+
+  <rect width="1600" height="1120" fill="#FFFFFF"/>
+  <text class="title" x="800" y="52" text-anchor="middle">WeStart 模型选择与工具调用结构</text>
+  <text class="subtitle" x="800" y="84" text-anchor="middle">模型不会自行寻找 Java 类；规划模型判断动作，业务代码按固定路由执行</text>
+
+  <rect class="group" x="38" y="110" width="1524" height="208"/>
+  <text class="groupTitle" x="58" y="140">① 消息入口与意图判断</text>
+
+  <rect class="box entry" x="72" y="172" width="230" height="94"/>
+  <text class="label" x="187" y="207">微信用户消息</text>
+  <text class="small" x="187" y="237">文字 / 图片 / 视频 / 音频</text>
+
+  <rect class="box process" x="362" y="172" width="238" height="94"/>
+  <text class="label" x="481" y="207">WechatMessageHandler</text>
+  <text class="small" x="481" y="237">接收、合并、去重、下载媒体</text>
+
+  <rect class="box process" x="670" y="162" width="270" height="114"/>
+  <text class="label" x="805" y="202">AiActionPlannerService</text>
+  <text class="small" x="805" y="233">把用户请求转换为结构化动作</text>
+  <text class="small" x="805" y="258">一轮只执行受允许的业务操作</text>
+
+  <rect class="box model" x="1010" y="172" width="250" height="94"/>
+  <text class="label" x="1135" y="207">plannerChatModel</text>
+  <text class="small" x="1135" y="237">只负责判断“要做什么”</text>
+
+  <rect class="box process" x="1324" y="172" width="200" height="94"/>
+  <text class="label" x="1424" y="207">AiModelConfiguration</text>
+  <text class="small" x="1424" y="237">创建三个命名 Bean</text>
+
+  <path class="edge" d="M302 219 H362"/>
+  <path class="edge" d="M600 219 H670"/>
+  <path class="edge" d="M1010 219 H940"/>
+  <path class="dash" d="M1324 219 H1260"/>
+
+  <rect class="group" x="38" y="346" width="1524" height="478"/>
+  <text class="groupTitle" x="58" y="376">② 按动作路由：模型能力与外部工具分开管理</text>
+
+  <rect class="box process" x="72" y="426" width="232" height="96"/>
+  <text class="label" x="188" y="460">普通文字对话</text>
+  <text class="small" x="188" y="490">BailianService</text>
+
+  <rect class="box model" x="362" y="426" width="238" height="96"/>
+  <text class="label" x="481" y="460">textChatModel</text>
+  <text class="small" x="481" y="490">回答、总结、生成内容</text>
+
+  <rect class="box process" x="72" y="584" width="232" height="96"/>
+  <text class="label" x="188" y="618">图片 / 视频理解</text>
+  <text class="small" x="188" y="648">BailianService 视觉方法</text>
+
+  <rect class="box model" x="362" y="584" width="238" height="96"/>
+  <text class="label" x="481" y="618">visionChatModel</text>
+  <text class="small" x="481" y="648">理解图片和视频画面</text>
+
+  <rect class="box tool" x="682" y="410" width="218" height="84"/>
+  <text class="label" x="791" y="444">图片生成</text>
+  <text class="small" x="791" y="472">ImageGenerationService</text>
+
+  <rect class="box tool" x="682" y="520" width="218" height="84"/>
+  <text class="label" x="791" y="554">音频转文字</text>
+  <text class="small" x="791" y="582">SpeechRecognitionService</text>
+
+  <rect class="box tool" x="682" y="630" width="218" height="84"/>
+  <text class="label" x="791" y="664">文字转语音</text>
+  <text class="small" x="791" y="692">TextToSpeechService</text>
+
+  <rect class="box tool" x="978" y="466" width="218" height="84"/>
+  <text class="label" x="1087" y="500">天气查询</text>
+  <text class="small" x="1087" y="528">QWeatherService</text>
+
+  <rect class="box tool" x="978" y="594" width="218" height="84"/>
+  <text class="label" x="1087" y="628">联网搜索</text>
+  <text class="small" x="1087" y="656">WebSearchService</text>
+
+  <rect class="box store" x="1274" y="490" width="230" height="120"/>
+  <text class="label" x="1389" y="528">H2 会话数据库</text>
+  <text class="small" x="1389" y="558">近期消息 + 长摘要</text>
+  <text class="small" x="1389" y="585">按用户隔离上下文</text>
+
+  <path class="edge" d="M805 276 V346 H188 V426"/>
+  <text class="edgeLabel" x="264" y="402">普通聊天</text>
+  <path class="edge" d="M188 522 V584"/>
+  <text class="edgeLabel" x="246" y="558">视觉消息</text>
+  <path class="edge" d="M304 474 H362"/>
+  <path class="edge" d="M304 632 H362"/>
+  <path class="edge" d="M805 276 V410"/>
+  <path class="edge" d="M805 494 V520"/>
+  <path class="edge" d="M805 604 V630"/>
+  <path class="edge" d="M940 276 V370 H1087 V466"/>
+  <path class="edge" d="M1087 550 V594"/>
+  <path class="edge" d="M1274 550 H1196"/>
+  <path class="edge" d="M1274 550 H600 V474"/>
+
+  <path class="dash" d="M1424 266 V334 H481 V426"/>
+  <path class="dash" d="M1424 266 V334 H1135 V266"/>
+  <path class="dash" d="M1424 266 V334 H620 V632 H600"/>
+
+  <rect class="group" x="38" y="852" width="1524" height="218"/>
+  <text class="groupTitle" x="58" y="882">③ 统一输出：业务代码控制副作用</text>
+
+  <rect class="box process" x="328" y="922" width="286" height="96"/>
+  <text class="label" x="471" y="956">业务执行与安全限制</text>
+  <text class="small" x="471" y="986">付费动作限制 / 防重复 / 错误处理</text>
+
+  <rect class="box entry" x="704" y="922" width="286" height="96"/>
+  <text class="label" x="847" y="956">微信发送层</text>
+  <text class="small" x="847" y="986">发送文字 / 图片 / 语音 / 文件</text>
+
+  <rect class="box entry" x="1080" y="922" width="230" height="96"/>
+  <text class="label" x="1195" y="956">用户收到结果</text>
+  <text class="small" x="1195" y="986">模型不能绕过业务层直接发送</text>
+
+  <path class="edge" d="M791 714 V866 H471 V922"/>
+  <path class="edge" d="M1087 678 V866 H471 V922"/>
+  <path class="edge" d="M481 680 V866 H471 V922"/>
+  <path class="edge" d="M614 970 H704"/>
+  <path class="edge" d="M990 970 H1080"/>
+
+  <text class="subtitle" x="800" y="1097" text-anchor="middle">绿色：LangChain4j 命名模型 Bean　｜　黄色：独立工具服务　｜　蓝色：微信输入输出　｜　紫色：持久化上下文</text>
+</svg>

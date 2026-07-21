@@ -1,0 +1,62 @@
+flowchart TB
+    U["微信用户消息<br/>文字 / 图片 / 视频 / 音频"]
+    W["微信消息接收层<br/>WechatMessageHandler"]
+    A["消息预处理<br/>合并消息・去重・下载媒体"]
+    P["意图规划层<br/>AiActionPlannerService"]
+    PM["plannerChatModel<br/>判断本轮要执行的动作"]
+
+    C["普通对话<br/>BailianService / StandaloneTextAssistant"]
+    TM["textChatModel<br/>文字理解与回答"]
+
+    V["视觉理解<br/>BailianService"]
+    VM["visionChatModel<br/>图片 / 视频画面理解"]
+
+    IMG["图片生成工具<br/>ImageGenerationService"]
+    ASR["语音识别工具<br/>SpeechRecognitionService"]
+    TTS["语音合成工具<br/>TextToSpeechService"]
+    WEATHER["天气工具<br/>QWeatherService"]
+    SEARCH["联网搜索工具<br/>WebSearchService"]
+
+    DB[("会话数据库 H2<br/>近期消息 + 长摘要")]
+    SEND["微信发送层<br/>发送文字 / 图片 / 语音 / 文件"]
+
+    CFG["AiModelConfiguration"]
+
+    U --> W --> A --> P
+    PM --> P
+    P -->|"普通聊天"| C --> TM
+    P -->|"识别图片 / 视频"| V --> VM
+    P -->|"生成图片"| IMG
+    P -->|"识别音频"| ASR
+    P -->|"语音回复"| C
+    TM --> TTS
+    P -->|"查询天气"| WEATHER
+    P -->|"查询最新信息"| SEARCH
+
+    DB <--> C
+    DB <--> P
+
+    TM --> SEND
+    VM --> SEND
+    IMG --> SEND
+    ASR --> C
+    TTS --> SEND
+    WEATHER --> C
+    SEARCH --> C
+    SEND --> U
+
+    CFG -. "创建命名 Bean" .-> TM
+    CFG -. "创建命名 Bean" .-> PM
+    CFG -. "创建命名 Bean" .-> VM
+
+    classDef entry fill:#EAF2F8,stroke:#2F5597,color:#111827,stroke-width:2px;
+    classDef process fill:#F7F9FC,stroke:#5B6B7A,color:#111827,stroke-width:1.6px;
+    classDef model fill:#E8F5E9,stroke:#3E7C59,color:#111827,stroke-width:2px;
+    classDef tool fill:#FFF8E1,stroke:#A67C00,color:#111827,stroke-width:1.6px;
+    classDef storage fill:#F3EAF7,stroke:#765083,color:#111827,stroke-width:1.6px;
+
+    class U,W,SEND entry;
+    class A,P,C,V,CFG process;
+    class TM,PM,VM model;
+    class IMG,ASR,TTS,WEATHER,SEARCH tool;
+    class DB storage;
