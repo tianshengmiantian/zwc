@@ -32,6 +32,7 @@ warnings.log
 
 HELP.md
 target/
+data/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
